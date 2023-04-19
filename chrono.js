@@ -1,76 +1,93 @@
-let chrono = document.getElementById("chrono");
-let resetBtn = document.getElementById("reset");
-let stopBtn = document.getElementById("stop");
-let startBtn = document.getElementById("start");
-
-let heures = 0;
+//Define vars to hold time values
+let seconds = 0;
 let minutes = 0;
-let secondes = 0;
+let hours = 0;
 
-let timeout;
+//Define vars to hold "display" value
+let displaySeconds = 0;
+let displayMinutes = 0;
+let displayHours = 0;
 
-let estArrete = true;
+//Define var to hold setInterval() function
+let interval = null;
 
-const demarrer = () => {
-    if(estArrete){
-        estArrete = false;
-        defilerTemps();
-    }
-};
+//Define var to hold stopwatch status
+let status = "stopped";
 
-const arreter = () => {
-    if(!estArrete){
-        estArrete = true;
-        clearTimeout(timeout);
-    }
-};
+//Stopwatch function (logic to determine when to increment next value, etc.)
+function stopWatch(){
 
-const defilerTemps = () => {
-    if(estArrete) return;
+    seconds++;
 
-    secondes = parseInt(secondes);
-    minutes = parseInt(minutes);
-    heures = parseInt(heures);
-
-    secondes++;
-
-    if(secondes == 60){
+    //Logic to determine when to increment next value
+    if(seconds / 60 === 1){
+        seconds = 0;
         minutes++;
-        secondes == 0;
+
+        if(minutes / 60 === 1){
+            minutes = 0;
+            hours++;
+        }
+
     }
 
-    if(minutes == 60){
-        heures++;
-        minutes == 0;
+    //If seconds/minutes/hours are only one digit, add a leading 0 to the value
+    if(seconds < 10){
+        displaySeconds = "0" + seconds.toString();
     }
-
-    //affichage
-    if(secondes < 10){
-        secondes = "0" + secondes;// ajoute un 0 avant le chiffre inférieur à 10
+    else{
+        displaySeconds = seconds;
     }
 
     if(minutes < 10){
-        minutes = "0" + minutes;//même chose pour les minutes
+        displayMinutes = "0" + minutes.toString();
+    }
+    else{
+        displayMinutes = minutes;
     }
 
-    if(heures < 10){
-        heures = "0" + heures;//même chose pour les heures
+    if(hours < 10){
+        displayHours = "0" + hours.toString();
+    }
+    else{
+        displayHours = hours;
     }
 
-    chrono.textContent =`${heures}:${minutes}:${secondes}`;
+    //Display updated time values to user
+    document.getElementById("display").innerHTML = displayHours + ":" + displayMinutes + ":" + displaySeconds;
 
-    timeout = setTimeout(defilerTemps, 1000);
-};
+}
 
-const reset = () => {
-    chrono.textContent = "00:00:00";
-    estArrete = true;
-    heures = 0;
+
+
+function startStop(){
+
+    if(status === "stopped"){
+
+        //Start the stopwatch (by calling the setInterval() function)
+        interval = window.setInterval(stopWatch, 1000);
+        document.getElementById("startStop").innerHTML = "Stop";
+        status = "started";
+
+    }
+    else{
+
+        window.clearInterval(interval);
+        document.getElementById("startStop").innerHTML = "Start";
+        status = "stopped";
+
+    }
+
+}
+
+//Function to reset the stopwatch
+function reset(){
+
+    window.clearInterval(interval);
+    seconds = 0;
     minutes = 0;
-    secondes = 0;
-    clearTimeout(timeout);
-};
+    hours = 0;
+    document.getElementById("display").innerHTML = "00:00:00";
+    document.getElementById("startStop").innerHTML = "Start";
 
-startBtn.addEventListener("click", demarrer);
-stopBtn.addEventListener("click", arreter);
-resetBtn.addEventListener("click", reset);
+}
