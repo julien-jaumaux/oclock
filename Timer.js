@@ -60,6 +60,7 @@ export default class Timer{
 
             if (this.remainingSeconds === 0){
                 this.stop();
+                alert('le temps est écoulé!');
             }
         }, 1000);
 
