@@ -1,64 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html>
+  <head>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="stylereveil.css">
-    <title>Réveil</title>
-</head>
-<body>
-    <div id="app">
-      <h1>Heures actuelle</h1>
-      <div id="current-time"></div>
-      <div class="create-alarm">
-        <div>Régler alarme</div>
-        <div class="form-actions">
-          <form>
-            <div class="alarm-inputs">
-              <input
-                type="number"
-                name="hour"
-                placeholder="Entrez les heures"
-                min="0"
-                max="12"
-                required
-              />
-              <input
-                type="number"
-                name="min"
-                min="0"
-                max="60"
-                placeholder="Entrez les minutes"
-                required
-              />
-              <input
-                type="number"
-                name="sec"
-                min="0"
-                max="60"
-                placeholder="Entrez les secondes"
-                required
-              />
-              <select name="zone" required>
-                <option value="" selected disabled>Zone</option>
-                <option value="AM">AM</option>
-                <option value="PM">PM</option>
-              </select>
-            </div>
-            <button>Activer</button>
-          </form>
-        </div>
-      </div>
+    <title>réveil</title>
+  </head>
+    
+  <body>
+    <div id="horloge">
+      <p>Vous avez besoin de l'heure ? Il est :</p>
+      <p id="heure"></p>
     </div>
-    <div id="active-alarm">
-      <div id="alarm-text"></div>
-      <button id="clear-alarm">Annuler alarme</button>
+    
+    <p>Besoin d'une réveil ? C'est ici que ça se passe !</p>
+    <br>
+    <div id="champs">
+      <input type="checkbox" name="chbox[]" onclick="reveil(this)">
+      <input type="number" value="0" min="0" max="23" name="h[]" id="h">
+      <input type="number" value="0" min="0" max="59" name="min[]" id="m">
+      <input type="text" placeholder="Description" name="description[]" id="mess">
+      <input type="submit" value="alarme" onclick="playSound()">
+      <audio id="son" src="alarme.wav"></audio>
+      <br />
     </div>
-    <audio id="alarm-audio"></audio>
-
+    <div>
+      <br>
+      <input type="submit" value="+" id="ajouter" onclick="addField();">
+    </div>
     <button><a href="./index.html">Menu principal</a></button>
-
-    <script src="./reveil.js"></script>
-</body>
+    <script src="reveil.js"></script>
+  </body>
 </html>

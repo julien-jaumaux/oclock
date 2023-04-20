@@ -1,16 +1,31 @@
 body{
     background-color: #dddddd;
     margin: 24px;
+    width: 780px;
+    height: 400px;
+}
+.container{
+    width: 480px;
+    height: 320px;
+    background-image: url(./timer.png);
+    background-position: center;
+    background-size: cover;
+    margin-bottom: 150px;
+    
 }
 .timer{
+    width: 335px;
+    height: 150px;
     font-family: sans-serif;
     display: inline-block;
     padding: 24px 32px;
     border-radius: 30px;
-    background: white;
+    background: rgb(183, 179, 179);
+    margin-top: 64px;
+    margin-left: 40px;
 }
 .timer__part{
-    font-size: 36px;
+    font-size: 100px;
     font-weight: bold;
 }
 .timer__btn{
