@@ -13,11 +13,23 @@ body{
     url('background.png');
     height: 100vh;
     width: 100vw;
-
     display: flex;
     justify-content: center;
     align-items: center;
 }
+a{
+    text-decoration: none;
+    font-size: 50px;
+  }
+  a:hover{
+    color: rgb(10, 220, 220);
+  }
+  .icon{
+    margin-top: 2px;
+    /* margin-left: 20px; */
+    align-self: self-start;
+    text-decoration: none;
+  }
 
 
 .horloge{
