@@ -1,32 +1,47 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="stylereveil.css">
-    <title>réveil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Réveil</title>
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&family=Roboto+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./stylereveil.css" />
   </head>
-    
   <body>
-    <div id="horloge">
-      <p>Vous avez besoin de l'heure ? Il est :</p>
-      <p id="heure"></p>
-    </div>
-    
-    <p>Besoin d'une réveil ? C'est ici que ça se passe !</p>
-    <br>
-    <div id="champs">
-      <input type="checkbox" name="chbox[]" onclick="reveil(this)">
-      <input type="number" value="0" min="0" max="23" name="h[]" id="h">
-      <input type="number" value="0" min="0" max="59" name="min[]" id="m">
-      <input type="text" placeholder="Description" name="description[]" id="mess">
-      <input type="submit" value="alarme" onclick="playSound()">
-      <audio id="son" src="9671.mp3"></audio>
-      <br />
-    </div>
-    <div>
-      <br>
-      <input type="submit" value="+" id="ajouter" onclick="addField();">
-    </div>
     <button><a href="./index.html">Menu principal</a></button>
-    <script src="reveil.js"></script>
+    <div class="wrapper">
+      <div class="timer-display">00:00:00</div>
+      <div class="container">
+        <div class="inputs">
+          <input
+            type="number"
+            id="hourInput"
+            placeholder="00"
+            min="0"
+            max="23"
+          />
+          <input
+            type="number"
+            id="minuteInput"
+            placeholder="00"
+            min="0"
+            max="59"
+          />
+        </div>
+        <button id="set">Add Alarm</button>
+        <div class="activeAlarms"></div>
+      </div>
+    </div>
+    <!-- Script -->
+    <script src="./reveil.js"></script>
   </body>
 </html>

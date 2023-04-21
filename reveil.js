@@ -1,51 +1,157 @@
-window.addEventListener("load",function(){
-  setInterval(function(){
-    var d = new Date();
-    document.getElementById("heure").textContent = d.toLocaleTimeString();
-  },1000);
+//Initial References
+let timerRef = document.querySelector(".timer-display");
+const hourInput = document.getElementById("hourInput");
+const minuteInput = document.getElementById("minuteInput");
+const activeAlarms = document.querySelector(".activeAlarms");
+const setAlarm = document.getElementById("set");
+let alarmsArray = [];
+let alarmSound = new Audio("9671.mp3");
+
+let initialHour = 0,
+  initialMinute = 0,
+  alarmIndex = 0;
+
+//Append zeroes for single digit
+const appendZero = (value) => (value < 10 ? "0" + value : value);
+
+//Search for value in object
+const searchObject = (parameter, value) => {
+  let alarmObject,
+    objIndex,
+    exists = false;
+  alarmsArray.forEach((alarm, index) => {
+    if (alarm[parameter] == value) {
+      exists = true;
+      alarmObject = alarm;
+      objIndex = index;
+      return false;
+    }
+  });
+  return [exists, alarmObject, objIndex];
+};
+
+//Display Time
+function displayTimer() {
+  let date = new Date();
+  let [hours, minutes, seconds] = [
+    appendZero(date.getHours()),
+    appendZero(date.getMinutes()),
+    appendZero(date.getSeconds()),
+  ];
+
+  //Display time
+  timerRef.innerHTML = `${hours}:${minutes}:${seconds}`;
+
+  //Alarm
+  alarmsArray.forEach((alarm, index) => {
+    if (alarm.isActive) {
+      if (`${alarm.alarmHour}:${alarm.alarmMinute}` === `${hours}:${minutes}`) {
+        alarmSound.play();
+        alarmSound.loop = true;
+      }
+    }
+  });
+}
+
+const inputCheck = (inputValue) => {
+  inputValue = parseInt(inputValue);
+  if (inputValue < 10) {
+    inputValue = appendZero(inputValue);
+  }
+  return inputValue;
+};
+
+hourInput.addEventListener("input", () => {
+  hourInput.value = inputCheck(hourInput.value);
 });
 
-function addField(){
-  var newdiv = document.createElement('div');
-          newdiv.innerHTML = " <div class='champs'><br><input type='checkbox' name='chbox[]' onclick='reveil(this)'> <input type='number' value='0' min='0' max='23' name='h[]' id='h'> <input type='number' value='0' min='0' max='59' name='min[]' id='m'> <input type='text' placeholder='Description' name='description[]'> <input type='submit' value='alarme' onclick='playSound()'> <input type='submit' value='-' onclick='delField(this)'></div>";
-          document.getElementById('champs').appendChild(newdiv);
-}
+minuteInput.addEventListener("input", () => {
+  minuteInput.value = inputCheck(minuteInput.value);
+});
 
-function delField(div){
-  var parent = div.parentNode;
-  parent.parentNode.removeChild(parent);
-}
-//////////////////////////////////////
-function message(){
-  var message = document.getElementById("mess");
-  alert(message);
-}
-//////////////////////////////////////
+//Create alarm div
 
-function playSound(){
-  var sound = document.getElementById("son");
-  sound.play();
-}
+const createAlarm = (alarmObj) => {
+  //Keys from object
+  const { id, alarmHour, alarmMinute } = alarmObj;
+  //Alarm div
+  let alarmDiv = document.createElement("div");
+  alarmDiv.classList.add("alarm");
+  alarmDiv.setAttribute("data-id", id);
+  alarmDiv.innerHTML = `<span>${alarmHour}: ${alarmMinute}</span>`;
 
-function reveil(alarme){
-  var interv;
-  if(alarme.checked===true){
-    alert("Activation du reveil !");
-    interv = setInterval(function(){
-      var now = new Date();
-      hour=now.getHours();
-      min=now.getMinutes();
-      if(document.getElementById("h").value === hour.toString()){
-        if(document.getElementById("m").value === min.toString()){
-          playSound();
-          //message();
-        }
-      }
-      if(alarme.checked===false){
-        alert("Desactivation du reveil");
-        clearInterval(interv);
-      }
-      
-    },1000);
+  //checkbox
+  let checkbox = document.createElement("input");
+  checkbox.setAttribute("type", "checkbox");
+  checkbox.addEventListener("click", (e) => {
+    if (e.target.checked) {
+      startAlarm(e);
+    } else {
+      stopAlarm(e);
+    }
+  });
+  alarmDiv.appendChild(checkbox);
+  //Delete button
+  let deleteButton = document.createElement("button");
+  deleteButton.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
+  deleteButton.classList.add("deleteButton");
+  deleteButton.addEventListener("click", (e) => deleteAlarm(e));
+  alarmDiv.appendChild(deleteButton);
+  activeAlarms.appendChild(alarmDiv);
+};
+
+//Set Alarm
+setAlarm.addEventListener("click", () => {
+  alarmIndex += 1;
+
+  //alarmObject
+  let alarmObj = {};
+  alarmObj.id = `${alarmIndex}_${hourInput.value}_${minuteInput.value}`;
+  alarmObj.alarmHour = hourInput.value;
+  alarmObj.alarmMinute = minuteInput.value;
+  alarmObj.isActive = false;
+  console.log(alarmObj);
+  alarmsArray.push(alarmObj);
+  createAlarm(alarmObj);
+  hourInput.value = appendZero(initialHour);
+  minuteInput.value = appendZero(initialMinute);
+});
+
+//Start Alarm
+const startAlarm = (e) => {
+  let searchId = e.target.parentElement.getAttribute("data-id");
+  let [exists, obj, index] = searchObject("id", searchId);
+  if (exists) {
+    alarmsArray[index].isActive = true;
   }
-}
+};
+
+//Stop alarm
+const stopAlarm = (e) => {
+  let searchId = e.target.parentElement.getAttribute("data-id");
+  let [exists, obj, index] = searchObject("id", searchId);
+  if (exists) {
+    alarmsArray[index].isActive = false;
+    alarmSound.pause();
+  }
+};
+
+//delete alarm
+const deleteAlarm = (e) => {
+  let searchId = e.target.parentElement.parentElement.getAttribute("data-id");
+  let [exists, obj, index] = searchObject("id", searchId);
+  if (exists) {
+    e.target.parentElement.parentElement.remove();
+    alarmsArray.splice(index, 1);
+  }
+};
+
+window.onload = () => {
+  setInterval(displayTimer);
+  initialHour = 0;
+  initialMinute = 0;
+  alarmIndex = 0;
+  alarmsArray = [];
+  hourInput.value = appendZero(initialHour);
+  minuteInput.value = appendZero(initialMinute);
+};
